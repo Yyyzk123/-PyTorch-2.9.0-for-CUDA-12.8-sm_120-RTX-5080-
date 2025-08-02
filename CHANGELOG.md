@@ -1,6 +1,8 @@
-# 📓 更新日志 / Changelog
+# 📓 Changelog
 
 ## [v2.9.0-sm120] - 2025-08-02
-- 🎉 初始发布：支持 PyTorch 2.9.0 + CUDA 12.8 + sm_120
-- ✅ 通过 Gaussian Splatting / SplaTAM 等验证
-- 🛠️ 包含 `.whl`、安装脚本、README.md
+- 🎉 Initial release: PyTorch 2.9.0 with CUDA 12.8 and `sm_120` support
+- ✅ Verified on real-world pipelines: Gaussian Splatting, SplaTAM
+- 🛠️ Includes `.whl` binary, install script, and `README.md`
+- 💬 Feedback and issues are welcome via [GitHub Issues](../../issues)
+
