@@ -8,6 +8,7 @@
 ## 🚀 Overview
 This repository provides a pre-built PyTorch 2.9.0 package compiled with CUDA 12.8 and `sm_120` architecture, targeting RTX 5080 Laptop GPUs (Ada Lovelace).
 该项目提供适配 CUDA 12.8 + sm_120 架构（RTX 5080）的 PyTorch 2.9.0 编译版本，已通过 Gaussian Splatting、SplaTAM 等实际任务验证。欢迎反馈问题或提交 PR！
+> ❗ **Note**: This build is tested **only on Ubuntu 22.04** with `Python 3.10` and `CUDA 12.8`. Not guaranteed to work on Windows.
 
 ## 🧪 Quick Install (3 Steps)
 ```bash
@@ -52,10 +53,35 @@ The script builds PyTorch with CUDA 12.8, targets sm_120, and writes the resulti
 > export LD_LIBRARY_PATH=/usr/local/cuda-12.8/lib64:$LD_LIBRARY_PATH
 > ```
 
-## Tested on
+## 🧪 Tested on
 - ✅ PyTorch GPU Acceleration (verified)
 - ✅ Gaussian Splatting
 - ✅ SplaTAM
+
+## 📂 Project Structure
+├── examples/
+│   ├── demo_tensor_cuda.py         # Simple CUDA tensor check
+│   └── verify_install.py           # Full verification test
+├── scripts/
+│   └── build_pytorch.sh            # Full build script from source
+├── install_from_whl.sh            # Quick install and verify script
+├── requirements.txt               # Python package dependencies
+├── build_info.md                  # Build environment & CUDA info
+├── CHANGELOG.md                   # Release notes
+├── CONTRIBUTING.md                # Contribution guide
+└── LICENSE                        # MIT License
+
+## 📦 Release Files
+You can download pre-built wheels from the GitHub Releases Page.
+Latest version: 
+> torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl
+
+## 📓 Changelog
+See "CHANGELOG.md" for update history.
+
+## 🙌 Contributing
+We welcome issues, PRs, or feedback!
+Please see CONTRIBUTING.md for guidelines.
 
 ## 👉 See [build_info.md](./build_info.md) for full build details (OS, CUDA, commit hash, etc).
 
