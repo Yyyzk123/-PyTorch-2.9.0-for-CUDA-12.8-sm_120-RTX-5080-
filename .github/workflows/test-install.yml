@@ -1,3 +1,4 @@
+# This workflow tests whether the PyTorch wheel can be installed and used correctly.
 name: Test Install PyTorch Wheel
 
 on:
@@ -23,7 +24,7 @@ jobs:
           apt update
           apt install -y wget curl python3-pip
 
-      - name: Set up Python 3.10 manually  # ✅ 容器中未自动安装
+      - name: Set up Python 3.10 manually
         run: |
           apt install -y software-properties-common
           add-apt-repository ppa:deadsnakes/ppa -y
