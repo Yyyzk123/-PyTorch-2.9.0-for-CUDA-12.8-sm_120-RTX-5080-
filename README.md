@@ -81,11 +81,10 @@ Latest version:
 
 
 ## 📓 Changelog
-See "CHANGELOG.md" for update history. [CHANGELOG.md](./CHANGELOG.md)
-
+See [CHANGELOG.md](./CHANGELOG.md) for update history. 
 ## 🙌 Contributing
 We welcome issues, PRs, or feedback!
-Please see CONTRIBUTING.md for guidelines.
+Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.  
 
 ## 👉 See [build_info.md](./build_info.md) for full build details (OS, CUDA, commit hash, etc).
 
