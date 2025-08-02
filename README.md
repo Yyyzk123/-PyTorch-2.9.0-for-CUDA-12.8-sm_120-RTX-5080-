@@ -74,7 +74,8 @@ The script builds PyTorch with CUDA 12.8, targets sm_120, and writes the resulti
 ## 📦 Release Files
 You can download pre-built wheels from the GitHub Releases Page.
 Latest version: 
-> torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl
+[torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl](https://github.com/Yyyzk123/pytorch-cuda128-sm120/releases/download/v2.9.0-sm120/torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl)
+
 
 ## 📓 Changelog
 See "CHANGELOG.md" for update history.
