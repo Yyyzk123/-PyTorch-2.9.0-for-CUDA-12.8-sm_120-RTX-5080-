@@ -1,4 +1,3 @@
-# This workflow tests whether the PyTorch wheel can be installed and used correctly.
 name: Test Install PyTorch Wheel
 
 on:
@@ -12,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: nvidia/cuda:12.8.0-runtime-ubuntu22.04
-      options: --gpus all
+      image: nvidia/cuda:12.8.0-runtime-ubuntu22.04  
+      # options: --gpus all         
 
     steps:
       - name: Checkout repository
@@ -41,17 +40,12 @@ jobs:
             | grep browser_download_url \
             | grep '.whl"' \
             | cut -d '"' -f 4)
-
           if [ -z "$RELEASE_URL" ]; then
             echo "No release found. Skipping wheel test."
             exit 0
           fi
-
           WHEEL_NAME=$(basename "$RELEASE_URL")
-          wget "$RELEASE_URL" -O "dist/$WHEEL_NAME" || {
-            echo "Failed to download wheel: $RELEASE_URL"
-            exit 1
-          }
+          wget "$RELEASE_URL" -O "dist/$WHEEL_NAME"
           echo "WHEEL_NAME=$WHEEL_NAME" >> $GITHUB_OUTPUT
 
       - name: Install from wheel
@@ -67,5 +61,4 @@ jobs:
 
       - name: Final check
         if: always()
-        run: |
-          echo "✅ Test complete! Believe in light, your PyTorch wheel is ready to shine!"
+        run: echo "✅ Test complete! Believe in light, your PyTorch wheel is ready to shine!"
