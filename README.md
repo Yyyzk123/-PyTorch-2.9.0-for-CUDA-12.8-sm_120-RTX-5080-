@@ -38,11 +38,11 @@ The script builds PyTorch with CUDA 12.8, targets sm_120, and writes the resulti
 - ✅ Python 3.10 environment
 - ✅ Verified on real-world AI pipelines (Gaussian Splatting, SplaTAM)
 
-## 📋 Requirements 
-- Linux x86_64（建议 Ubuntu 22.04）
-- Python 3.10（推荐使用 Conda）
-- CUDA 12.8 已安装（NVIDIA 驱动 >= 550）
-- NVIDIA GPU 支持 sm_120（例如 RTX 5080）
+## 📋 Requirements
+- Linux x86_64 (Recommended: Ubuntu 22.04)
+- Python 3.10 (Conda environment recommended)
+- CUDA 12.8 installed (NVIDIA driver >= 550)
+- NVIDIA GPU supporting `sm_120` (e.g., RTX 5080 Laptop)
 - pip >= 21.0
 > ⚠️ **Warning**  
 > Make sure your CUDA path is correctly set:  
