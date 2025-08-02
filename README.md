@@ -19,6 +19,9 @@ pip install torch-2.9.0a0+sm120-cuda128-cp310-cp310-linux_x86_64.whl
 
 # Step 3: Verify
 python -c "import torch; print(torch.__version__); print(torch.cuda.get_device_name(0))"
+
+# Step 4: Verify
+python examples/verify_install.py
 ``` 
 
 ## Features
