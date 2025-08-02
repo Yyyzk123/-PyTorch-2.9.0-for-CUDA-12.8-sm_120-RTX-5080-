@@ -11,30 +11,50 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: nvidia/cuda:12.8.0-runtime-ubuntu22.04  
-      # options: --gpus all         
+      image: nvidia/cuda:12.8.0-runtime-ubuntu22.04   # CUDA 12.8 运行时镜像
+      # 注意：官方托管 Runner 无 GPU，故不再加 `--gpus all`
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install system dependencies
+      #-------------------------------------------------
+      # ① 安装系统依赖 + cuDNN 8 for CUDA 12.8
+      #-------------------------------------------------
+      - name: Install system dependencies and cuDNN
         run: |
+          set -e
           apt update
-          apt install -y wget curl python3-pip
+          apt install -y wget curl python3-pip software-properties-common gnupg
 
-      - name: Set up Python 3.10 manually
+          # -- Add NVIDIA CUDA / cuDNN repo key & list --
+          apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub
+          echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /" \
+            > /etc/apt/sources.list.d/nvidia-cuda.list
+
+          # -- Install cuDNN 8 runtime (compatible with CUDA 12.8) --
+          apt update
+          apt install -y libcudnn8=8.9.6.*-1+cuda12.8
+
+      #-------------------------------------------------
+      # ② 安装 Python 3.10（容器内默认无）
+      #-------------------------------------------------
+      - name: Set up Python 3.10
         run: |
-          apt install -y software-properties-common
+          set -e
           add-apt-repository ppa:deadsnakes/ppa -y
           apt update
           apt install -y python3.10 python3.10-venv python3.10-dev python3.10-distutils
           update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
           curl -sS https://bootstrap.pypa.io/get-pip.py | python
 
+      #-------------------------------------------------
+      # ③ 下载最新 Release 中的 .whl
+      #-------------------------------------------------
       - name: Download wheel from latest GitHub release
         id: download
         run: |
+          set -e
           mkdir -p dist
           RELEASE_URL=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest \
             | grep browser_download_url \
@@ -46,8 +66,11 @@ jobs:
           fi
           WHEEL_NAME=$(basename "$RELEASE_URL")
           wget "$RELEASE_URL" -O "dist/$WHEEL_NAME"
-          echo "WHEEL_NAME=$WHEEL_NAME" >> $GITHUB_OUTPUT
+          echo "WHEEL_NAME=$WHEEL_NAME" >> "$GITHUB_OUTPUT"
 
+      #-------------------------------------------------
+      # ④ 安装并验证 .whl
+      #-------------------------------------------------
       - name: Install from wheel
         if: steps.download.outputs.WHEEL_NAME
         run: |
