@@ -24,17 +24,18 @@ jobs:
       - name: Install system dependencies and cuDNN
         run: |
           set -e
-          apt update
-          apt install -y wget curl python3-pip software-properties-common gnupg
+          apt-get update
+          apt-get install -y wget curl python3-pip software-properties-common gnupg ca-certificates
+      
+          # ---- Install NVIDIA cuda-keyring (adds repo + key, no apt-key) ----
+          wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb
+          dpkg -i cuda-keyring_1.1-1_all.deb
+          rm cuda-keyring_1.1-1_all.deb
+      
+          # ---- Now install cuDNN runtime that matches CUDA 12.8 ----
+          apt-get update
+          apt-get install -y libcudnn8=8.9.6.*-1+cuda12.8
 
-          # -- Add NVIDIA CUDA / cuDNN repo key & list --
-          apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub
-          echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /" \
-            > /etc/apt/sources.list.d/nvidia-cuda.list
-
-          # -- Install cuDNN 8 runtime (compatible with CUDA 12.8) --
-          apt update
-          apt install -y libcudnn8=8.9.6.*-1+cuda12.8
 
       #-------------------------------------------------
       # ② 安装 Python 3.10（容器内默认无）
