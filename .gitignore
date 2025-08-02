@@ -1,8 +1,8 @@
-# ===== Python 缓存文件 =====
+# ===== Python cache files =====
 __pycache__/
 *.py[cod]
 
-# ===== 虚拟环境（Conda / venv）=====
+# ===== Virtual environments (Conda / venv) =====
 .venv/
 env/
 ENV/
@@ -10,36 +10,36 @@ venv/
 env.bak/
 .conda/
 
-# ===== Jupyter Notebook 检查点（如后续添加）=====
+# ===== Jupyter Notebook checkpoints =====
 .ipynb_checkpoints/
 
-# ===== 安装生成产物 / 构建缓存 =====
+# ===== Build artifacts and installation output =====
 *.egg-info/
 dist/
 build/
 *.whl
 *.log
 
-# ===== IDE & 编辑器 =====
+# ===== IDEs & Editors =====
 .vscode/
 .idea/
 
-# ===== 临时测试输出（如demo运行时）=====
+# ===== Temporary outputs (e.g., demo runs) =====
 *.out
 *.tmp
 *.bak
 
-# ===== Linux / macOS 系统文件 =====
+# ===== Linux / macOS files =====
 .DS_Store
 Thumbs.db
 
-# ===== pip 缓存 & coverage =====
+# ===== pip cache & coverage reports =====
 pip-log.txt
 htmlcov/
 .coverage
 .pytest_cache/
 
-# ===== CUDA / C++ 编译中间文件（如未来扩展）=====
+# ===== CUDA / C++ build intermediates (for future extensions) =====
 *.so
 *.o
 *.a
