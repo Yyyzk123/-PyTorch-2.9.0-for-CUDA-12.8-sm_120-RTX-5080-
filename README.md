@@ -59,17 +59,18 @@ The script builds PyTorch with CUDA 12.8, targets sm_120, and writes the resulti
 - ✅ SplaTAM
 
 ## 📂 Project Structure
+
 ├── examples/
-│   ├── demo_tensor_cuda.py         # Simple CUDA tensor check
-│   └── verify_install.py           # Full verification test
+│ ├── demo_tensor_cuda.py # Simple CUDA tensor check
+│ └── verify_install.py # Full verification test
 ├── scripts/
-│   └── build_pytorch.sh            # Full build script from source
-├── install_from_whl.sh            # Quick install and verify script
-├── requirements.txt               # Python package dependencies
-├── build_info.md                  # Build environment & CUDA info
-├── CHANGELOG.md                   # Release notes
-├── CONTRIBUTING.md                # Contribution guide
-└── LICENSE                        # MIT License
+│ └── build_pytorch.sh # Full build script from source
+├── install_from_whl.sh # Quick install and verify script
+├── requirements.txt # Python package dependencies
+├── build_info.md # Build environment & CUDA info
+├── CHANGELOG.md # Release notes
+├── CONTRIBUTING.md # Contribution guide
+└── LICENSE # MIT License
 
 ## 📦 Release Files
 You can download pre-built wheels from the GitHub Releases Page.
