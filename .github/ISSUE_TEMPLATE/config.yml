@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Q&A Discussions
+    url: https://github.com/Yyyzk123/pytorch-cuda128-sm120/discussions
+    about: Ask questions or discuss ideas here.
