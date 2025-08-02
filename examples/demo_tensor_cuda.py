@@ -3,32 +3,30 @@
 import torch
 import sys
 
-print("Verifying PyTorch CUDA tensor operations...\n")
-print("-----------------------------------------")
-print(f"PyTorch version: {torch.__version__}")
-print(f"CUDA available: {torch.cuda.is_available()}")
+print("🧪 Verifying PyTorch CUDA tensor operations...\n")
+print("────────────────────────────────────────────")
+print(f"🧠 PyTorch version: {torch.__version__}")
+print(f"⚙️ CUDA available: {torch.cuda.is_available()}")
 
-# Check CUDA availability
-if not torch.cuda.is_available():
-    print("[ERROR] CUDA not available. Please check your installation:")
-    print("  1. Download CUDA 12.8: https://developer.nvidia.com/cuda-downloads")
-    print("  2. Install and restart your terminal")
-    sys.exit(1)
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+    print(f"✅ Using GPU: {torch.cuda.get_device_name(device)}")
+else:
+    device = torch.device("cpu")
+    print("⚠️ CUDA not available. Running on CPU instead.")
 
-# Perform tensor operations on GPU
-device = torch.device("cuda")
-print(f"Using GPU: {torch.cuda.get_device_name(device)}")
-
+# Perform tensor operations on selected device
 x = torch.ones((3, 3), dtype=torch.float32).to(device)
 y = torch.rand((3, 3), dtype=torch.float32).to(device)
 z = x + y
 
-print("\nInput Tensor X (ones):")
+print("\n📦 Input Tensor X (ones):")
 print(x)
-print("\nInput Tensor Y (random):")
+print("\n📦 Input Tensor Y (random):")
 print(y)
-print("\nOutput Tensor Z = X + Y:")
+print("\n📦 Output Tensor Z = X + Y:")
 print(z)
-print("-----------------------------------------")
-print("[SUCCESS] Tensor operation on GPU completed!")
-print("Believe in light!")
+
+print("────────────────────────────────────────────")
+print(f"[SUCCESS] Tensor operation completed on: {device.type.upper()}")
+print("Believe in light! 🌟")
