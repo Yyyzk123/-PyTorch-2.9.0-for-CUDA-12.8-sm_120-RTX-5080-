@@ -11,47 +11,40 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: nvidia/cuda:12.8.0-runtime-ubuntu22.04   # CUDA 12.8 运行时镜像
-      # 注意：官方托管 Runner 无 GPU，故不再加 `--gpus all`
+      image: nvidia/cuda:12.8.0-runtime-ubuntu22.04   # CUDA 12.8 runtime
+      # (no --gpus all; runner 没 GPU)
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        name: Checkout repository
 
-      #-------------------------------------------------
-      # ① 安装系统依赖 + cuDNN 8 for CUDA 12.8
-      #-------------------------------------------------
+      # ① 系统依赖 + cuDNN
       - name: Install system dependencies and cuDNN
         run: |
           set -e
           apt-get update
           apt-get install -y wget curl python3-pip software-properties-common gnupg ca-certificates
-      
-          # ---- Install NVIDIA cuda-keyring (adds repo + key, no apt-key) ----
+
+          # Add NVIDIA keyring (adds repo & key)
           wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb
           dpkg -i cuda-keyring_1.1-1_all.deb
           rm cuda-keyring_1.1-1_all.deb
-      
-          # ---- Now install cuDNN runtime that matches CUDA 12.8 ----
+
+          # Install cuDNN 8 runtime (matches CUDA 12.8)
           apt-get update
           apt-get install -y libcudnn8=8.9.6.*-1+cuda12.8
 
-
-      #-------------------------------------------------
-      # ② 安装 Python 3.10（容器内默认无）
-      #-------------------------------------------------
+      # ② Python 3.10
       - name: Set up Python 3.10
         run: |
           set -e
           add-apt-repository ppa:deadsnakes/ppa -y
-          apt update
-          apt install -y python3.10 python3.10-venv python3.10-dev python3.10-distutils
+          apt-get update
+          apt-get install -y python3.10 python3.10-venv python3.10-dev python3.10-distutils
           update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
           curl -sS https://bootstrap.pypa.io/get-pip.py | python
 
-      #-------------------------------------------------
-      # ③ 下载最新 Release 中的 .whl
-      #-------------------------------------------------
+      # ③ 下载 wheel
       - name: Download wheel from latest GitHub release
         id: download
         run: |
@@ -69,9 +62,7 @@ jobs:
           wget "$RELEASE_URL" -O "dist/$WHEEL_NAME"
           echo "WHEEL_NAME=$WHEEL_NAME" >> "$GITHUB_OUTPUT"
 
-      #-------------------------------------------------
-      # ④ 安装并验证 .whl
-      #-------------------------------------------------
+      # ④ 安装并验证
       - name: Install from wheel
         if: steps.download.outputs.WHEEL_NAME
         run: |
