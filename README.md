@@ -57,3 +57,5 @@ The script builds PyTorch with CUDA 12.8, targets sm_120, and writes the resulti
 - ✅ Gaussian Splatting
 - ✅ SplaTAM
 
+## 👉 See [build_info.md](./build_info.md) for full build details (OS, CUDA, commit hash, etc).
+
