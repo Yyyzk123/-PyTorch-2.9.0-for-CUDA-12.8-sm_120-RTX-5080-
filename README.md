@@ -81,7 +81,7 @@ Latest version:
 
 
 ## 📓 Changelog
-See "CHANGELOG.md" for update history.
+See "CHANGELOG.md" for update history. [CHANGELOG.md](./CHANGELOG.md)
 
 ## 🙌 Contributing
 We welcome issues, PRs, or feedback!
