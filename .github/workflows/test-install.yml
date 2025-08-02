@@ -12,14 +12,14 @@ jobs:
 
     container:
       image: nvidia/cuda:12.8.0-runtime-ubuntu22.04   # CUDA 12.8 runtime
-      # (no --gpus all; runner 没 GPU)
+      # (no --gpus all; runner no GPU)
 
     steps:
       - uses: actions/checkout@v4
         name: Checkout repository
 
-      # ① 系统依赖 + cuDNN
-      - name: Install system dependencies and cuDNN
+      # ① 系统依赖 + cuDNN + OpenBLAS
+      - name: Install system dependencies, cuDNN, OpenBLAS
         run: |
           set -e
           apt-get update
@@ -33,6 +33,9 @@ jobs:
           # Install cuDNN 8 runtime (matches CUDA 12.8)
           apt-get update
           apt-get install -y libcudnn8
+
+          # Install OpenBLAS runtime & headers (provides libopenblas.so.0)
+          apt-get install -y libopenblas0-pthread libopenblas-dev
 
       # ② Python 3.10
       - name: Set up Python 3.10
