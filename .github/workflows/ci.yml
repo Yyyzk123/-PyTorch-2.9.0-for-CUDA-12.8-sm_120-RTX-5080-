@@ -9,19 +9,28 @@ on:
 jobs:
   install-test:
     runs-on: ubuntu-latest
+
+    container:
+      image: nvidia/cuda:12.8.0-runtime-ubuntu22.04
+      options: --gpus all
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
       - name: Install system dependencies
         run: |
-          sudo apt update
-          sudo apt install -y wget
+          apt update
+          apt install -y wget curl python3-pip
+
+      - name: Set up Python 3.10 manually  # ✅ 容器中未自动安装
+        run: |
+          apt install -y software-properties-common
+          add-apt-repository ppa:deadsnakes/ppa -y
+          apt update
+          apt install -y python3.10 python3.10-venv python3.10-dev python3.10-distutils
+          update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
+          curl -sS https://bootstrap.pypa.io/get-pip.py | python
 
       - name: Download wheel from latest GitHub release
         id: download
@@ -47,20 +56,15 @@ jobs:
       - name: Install from wheel
         if: steps.download.outputs.WHEEL_NAME
         run: |
-          set -x
           chmod +x install_from_whl.sh
           ./install_from_whl.sh "dist/${{ steps.download.outputs.WHEEL_NAME }}"
 
       - name: Verify installation
         if: steps.download.outputs.WHEEL_NAME
         run: |
-          set -x
           python examples/demo_tensor_cuda.py
 
       - name: Final check
         if: always()
         run: |
-          echo "Test complete! Believe in light, your PyTorch wheel is ready to shine!"
-          if [ $? -ne 0 ]; then
-            echo "Some steps failed. Check logs for details."
-          fi
+          echo "✅ Test complete! Believe in light, your PyTorch wheel is ready to shine!"
