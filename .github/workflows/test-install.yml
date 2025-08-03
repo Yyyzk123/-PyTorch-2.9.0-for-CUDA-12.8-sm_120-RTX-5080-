@@ -37,7 +37,9 @@ jobs:
           apt-get install -y python3.10 python3.10-venv python3.10-dev python3.10-distutils
           update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
           python3.10 -m ensurepip --upgrade
-          python3.10 -m pip install --upgrade pip
+          # ✅ 省掉升级，pip 24 已够用；如需升级，改用 --break-system-packages
+          # python3.10 -m pip install --upgrade pip --break-system-packages
+
 
       # ③ 下载 wheel 文件
       - name: Download wheel from latest GitHub release
