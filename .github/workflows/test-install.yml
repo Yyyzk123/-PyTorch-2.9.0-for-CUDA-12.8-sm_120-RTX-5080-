@@ -26,12 +26,17 @@ jobs:
           apt-get install -y libnuma1 libgomp1
           apt-get install -y libopenblas0-pthread libopenblas-dev
 
-          # 🔰 cuDNN 软链接兜底：若镜像缺顶层 libcudnn.so.8，则建立链接并刷新缓存
-          if [ -e /usr/local/cuda/lib64/libcudnn.so.8 ] && \
-             [ ! -e /usr/lib/x86_64-linux-gnu/libcudnn.so.8 ]; then
-            echo "🔗  Linking libcudnn.so.8 to system library path..."
-            ln -s /usr/local/cuda/lib64/libcudnn.so.8 /usr/lib/x86_64-linux-gnu/libcudnn.so.8
-            ldconfig
+          # ---------- cuDNN 软链接兜底 ----------
+          CUDNN_SRC=$(ls /usr/local/cuda/lib64/libcudnn.so.8* 2>/dev/null | head -n1 || true)
+          if [ ! -e /usr/lib/x86_64-linux-gnu/libcudnn.so.8 ]; then
+            if [ -n "$CUDNN_SRC" ]; then
+              echo "🔗  Linking $CUDNN_SRC → libcudnn.so.8 ..."
+              ln -s "$CUDNN_SRC" /usr/lib/x86_64-linux-gnu/libcudnn.so.8
+              ldconfig
+            else
+              echo "❌  No libcudnn.so.8* found in /usr/local/cuda/lib64 — image inconsistency."
+              exit 1
+            fi
           fi
    
      
