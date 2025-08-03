@@ -10,88 +10,70 @@ jobs:
   install-test:
     runs-on: ubuntu-latest
 
+    # Ubuntu 24.04.2 + CUDA 12.8.1 + cuDNN 9 runtime
     container:
-      image: nvidia/cuda:12.8.1-cudnn-runtime-ubuntu24.04  # ✅ 修正为 Ubuntu 24.04 对应镜像
+      image: nvidia/cuda:12.8.1-cudnn-runtime-ubuntu24.04
 
     steps:
       - uses: actions/checkout@v4
         name: Checkout repository
 
-      # ① 安装系统依赖 + cuDNN + OpenBLAS + NUMA + OpenMP
-      - name: Install system dependencies, cuDNN, OpenBLAS
+      # ① 安装系统依赖 + cuDNN9 + OpenBLAS + NUMA + OpenMP
+      - name: Install system dependencies
         run: |
           set -e
           apt-get update -qq
-          apt-get install -y wget curl python3-pip software-properties-common gnupg ca-certificates
-          apt-get install -y libnuma1 libgomp1
-          apt-get install -y libopenblas0-pthread libopenblas-dev
+          apt-get install -y --no-install-recommends \
+              wget curl gnupg ca-certificates software-properties-common \
+              libnuma1 libgomp1 \
+              libopenblas0-pthread libopenblas-dev
 
-          # ---------- cuDNN 软链接兜底 ----------
-          CUDNN_SRC=$(ls /usr/local/cuda/lib64/libcudnn.so.8* 2>/dev/null | head -n1 || true)
-          if [ ! -e /usr/lib/x86_64-linux-gnu/libcudnn.so.8 ]; then
-            if [ -n "$CUDNN_SRC" ]; then
-              echo "🔗  Linking $CUDNN_SRC → libcudnn.so.8 ..."
-              ln -s "$CUDNN_SRC" /usr/lib/x86_64-linux-gnu/libcudnn.so.8
-              ldconfig
-            else
-              echo "❌  No libcudnn.so.8* found in /usr/local/cuda/lib64 — image inconsistency."
-              exit 1
-            fi
-          fi
-   
-     
-      # ② 安装 Python 3.10
-      - name: Set up Python 3.10
-        run: |
-          set -e
-          add-apt-repository ppa:deadsnakes/ppa -y
+          # ---- 安装 cuDNN 9（官方 deb）----
+          rm -f /etc/apt/sources.list.d/cuda-ubuntu2404-x86_64.list || true
+          wget -q https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
+          dpkg -i cuda-keyring_1.1-1_all.deb && rm cuda-keyring_1.1-1_all.deb
           apt-get update -qq
-          apt-get install -y python3.10 python3.10-venv python3.10-dev python3.10-distutils
-          # 绑定 python 和 python3 到 3.10
-          update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
-          update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
-          # pip & ensurepip
-          python3.10 -m ensurepip --upgrade
-          # 如无特殊需求，保持系统 pip 24，省去升级冲突
+          apt-get install -y libcudnn9
 
+          # 确保 python / python3 指向系统 Python 3.12
+          update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 
-      # ③ 下载 wheel 文件
+      # ② 下载最新 wheel
       - name: Download wheel from latest GitHub release
         id: download
         run: |
           set -e
           mkdir -p dist
           RELEASE_URL=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest \
-            | grep browser_download_url \
-            | grep '.whl"' \
-            | cut -d '"' -f 4)
+            | grep browser_download_url | grep '.whl"' | cut -d '"' -f 4)
           if [ -z "$RELEASE_URL" ]; then
-            echo "No release found. Skipping wheel test."
-            exit 0
+            echo "No release found. Skipping wheel test."; exit 0
           fi
           WHEEL_NAME=$(basename "$RELEASE_URL")
           wget "$RELEASE_URL" -O "dist/$WHEEL_NAME"
           echo "WHEEL_NAME=$WHEEL_NAME" >> "$GITHUB_OUTPUT"
-          
-          # ➕ 输出 SHA256 校验和（非强制）
           sha256sum "dist/$WHEEL_NAME"
 
-      # ④ 安装 wheel
+      # ③ 安装 wheel
       - name: Install from wheel
         if: steps.download.outputs.WHEEL_NAME
         run: |
           chmod +x install_from_whl.sh
           ./install_from_whl.sh "dist/${{ steps.download.outputs.WHEEL_NAME }}"
 
-      # ⑤ 验证 torch + CUDA 正常性
+      # ④ 运行 demo & 检查 CUDA
       - name: Verify installation
         if: steps.download.outputs.WHEEL_NAME
         run: |
-          echo "Running demo_tensor_cuda.py..."
+          echo "Running demo..."
           python examples/demo_tensor_cuda.py
 
-          echo "Running CUDA check..."
-          python -c "import torch; print('✅ torch.cuda.is_available():', torch.cuda.is_available())"
+          python - <<'PY'
+          import torch, platform
+          print("Python :", platform.python_version())
+          print("Torch   :", torch.__version__)
+          print("CUDA OK :", torch.cuda.is_available())
+          PY
 
       # ✅ 结束标记
       - name: Final check
