@@ -1,10 +1,12 @@
-# Minimal dependencies for demo_tensor_cuda.py
-# Torch is installed via .whl (do NOT include it here)
+# Core dependency: When installing the self-compiled PyTorch wheel, torch will be included.
+# If the user does not install the .whl, this requirements can be used for reproduction.
 
-typing-extensions==4.7.1     # Verified with PyTorch 2.9.0
-filelock==3.12.2             # Used in torch.utils.model_zoo
-jinja2==3.1.3                # For config or template rendering
-fsspec==2023.6.0             # For file system abstraction
-sympy==1.12                  # Used by torch.fx symbolic tracing
-networkx==3.1                # Required by torch.fx
-mpmath==1.3.0                # For sympy symbolic math
+torch==2.9.0a0+gitc665594     # Optional, usually installed via .whl
+typing-extensions>=4.10.0
+mpmath<1.4,>=1.1.0
+sympy>=1.14.0
+networkx>=3.4.0
+fsspec>=2025.6.0
+filelock>=3.17.0
+jinja2>=3.1.6
+MarkupSafe>=3.0.2
