@@ -35,10 +35,12 @@ jobs:
           add-apt-repository ppa:deadsnakes/ppa -y
           apt-get update -qq
           apt-get install -y python3.10 python3.10-venv python3.10-dev python3.10-distutils
+          # 绑定 python 和 python3 到 3.10
           update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
+          update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
+          # pip & ensurepip
           python3.10 -m ensurepip --upgrade
-          # ✅ 省掉升级，pip 24 已够用；如需升级，改用 --break-system-packages
-          # python3.10 -m pip install --upgrade pip --break-system-packages
+          # 如无特殊需求，保持系统 pip 24，省去升级冲突
 
 
       # ③ 下载 wheel 文件
