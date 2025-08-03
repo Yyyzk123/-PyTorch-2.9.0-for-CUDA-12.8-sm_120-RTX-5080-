@@ -45,6 +45,9 @@ jobs:
           update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
           # ✅ ❌ 删除 curl 安装 pip，避免冲突
           # curl -sS https://bootstrap.pypa.io/get-pip.py | python
+          # ➕ 为 3.10 装/升级 pip，保证后面的 install_from_whl.sh 可用
+          python -m ensurepip --upgrade
+          python -m pip install --upgrade pip
 
       # ③ 下载 wheel 文件
       - name: Download wheel from latest GitHub release
