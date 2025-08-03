@@ -27,13 +27,6 @@ jobs:
           # ➕ 必需依赖，修复 torch._C 加载失败
           apt-get install -y libnuma1 libgomp1
           apt-get install -y libopenblas0-pthread libopenblas-dev
-          
-          # 🔰 兜底：若镜像缺 libcudnn.so.8 就自动装
-          if ! ldconfig -p | grep -q "libcudnn.so.8"; then
-            echo "⚠️  cuDNN runtime not found in image — installing from APT..."
-            apt-get update -qq
-            apt-get install -y libcudnn8
-          fi
      
       # ② 安装 Python 3.10
       - name: Set up Python 3.10
