@@ -93,16 +93,11 @@ Latest version:
 [torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl]
 (https://github.com/Yyyzk123/pytorch-cuda128-sm120/releases/download/v2.9.0-sm120/torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl)
 
-## 🐛 Found a Bug or Have a Feature Request?
-We're happy to improve this repo with you!
-- 👉 [Submit a Bug Report](https://github.com/Yyyzk123/YOUR_REPO_NAME/issues/new?template=bug_report.yaml)
-- ✨ [Request a Feature](https://github.com/Yyyzk123/YOUR_REPO_NAME/issues/new?template=feature_request.yaml)
-> Please check [CONTRIBUTING.md](CONTRIBUTING.md) before submitting.
-
 ## 📓 Changelog
 See [CHANGELOG.md](./CHANGELOG.md) for update history. 
+
 ## 🙌 Contributing
-We welcome issues, PRs, or feedback!
+- Feedback and issues are welcome via [GitHub Issues](https://github.com/Yyyzk123/pytorch-cuda128-sm120/issues)
 Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.  
 
 ## 👉 See [build_info.md](./build_info.md) for full build details (OS, CUDA, commit hash, etc).
