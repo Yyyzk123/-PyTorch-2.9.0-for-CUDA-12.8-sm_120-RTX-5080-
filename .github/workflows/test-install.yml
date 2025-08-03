@@ -27,9 +27,9 @@ jobs:
           # ➕ 必需依赖，修复 torch._C 加载失败
           apt-get install -y libnuma1 libgomp1
 
-          # ⚠️ 容器已自带 CUDA repo & keyring，删掉以下两行即可
-          # wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
-          # dpkg -i cuda-keyring_1.1-1_all.deb && rm cuda-keyring_1.1-1_all.deb
+          # 添加 NVIDIA CUDA & cuDNN apt 源
+          wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
+          dpkg -i cuda-keyring_1.1-1_all.deb && rm cuda-keyring_1.1-1_all.deb
 
           apt-get update
           apt-get install -y libcudnn8
