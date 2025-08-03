@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: nvidia/cuda:12.8.0-runtime-ubuntu24.04
+      image: nvidia/cuda:12.8.0-runtime-ubuntu24.04  # ✅ 修正为 Ubuntu 24.04 对应镜像
 
     steps:
       - uses: actions/checkout@v4
@@ -27,8 +27,8 @@ jobs:
           # ➕ 必需依赖，修复 torch._C 加载失败
           apt-get install -y libnuma1 libgomp1
 
-          # Add NVIDIA keyring
-          wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb
+          # ✅ 修正为 ubuntu2404 对应的 CUDA keyring
+          wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
           dpkg -i cuda-keyring_1.1-1_all.deb
           rm cuda-keyring_1.1-1_all.deb
 
@@ -46,7 +46,8 @@ jobs:
           apt-get update
           apt-get install -y python3.10 python3.10-venv python3.10-dev python3.10-distutils
           update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
-          curl -sS https://bootstrap.pypa.io/get-pip.py | python
+          # ✅ ❌ 删除 curl 安装 pip，避免冲突
+          # curl -sS https://bootstrap.pypa.io/get-pip.py | python
 
       # ③ 下载 wheel 文件
       - name: Download wheel from latest GitHub release
