@@ -27,6 +27,19 @@ jobs:
           # ➕ 必需依赖，修复 torch._C 加载失败
           apt-get install -y libnuma1 libgomp1
           apt-get install -y libopenblas0-pthread libopenblas-dev
+
+          # ---------- ①️⃣ 添加 NVIDIA CUDA & cuDNN APT 源 ----------
+          # 若列表已存在、但无 Signed-By 字段，会导致冲突，
+          # 先删除旧列表再装 keyring，避免 “Conflicting values for Signed-By” 报错
+          rm -f /etc/apt/sources.list.d/cuda-ubuntu2404-x86_64.list || true
+
+          wget -q https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
+          dpkg -i cuda-keyring_1.1-1_all.deb
+          rm cuda-keyring_1.1-1_all.deb
+
+          apt-get update -qq
+          # ---------- ②️⃣ 安装 cuDNN runtime ----------
+          apt-get install -y libcudnn8
      
       # ② 安装 Python 3.10
       - name: Set up Python 3.10
