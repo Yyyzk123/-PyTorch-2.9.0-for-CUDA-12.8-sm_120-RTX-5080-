@@ -23,10 +23,17 @@ jobs:
           set -e
           apt-get update -qq
           apt-get install -y wget curl python3-pip software-properties-common gnupg ca-certificates
-
-          # ➕ 必需依赖，修复 torch._C 加载失败
           apt-get install -y libnuma1 libgomp1
           apt-get install -y libopenblas0-pthread libopenblas-dev
+
+          # 🔰 cuDNN 软链接兜底：若镜像缺顶层 libcudnn.so.8，则建立链接并刷新缓存
+          if [ -e /usr/local/cuda/lib64/libcudnn.so.8 ] && \
+             [ ! -e /usr/lib/x86_64-linux-gnu/libcudnn.so.8 ]; then
+            echo "🔗  Linking libcudnn.so.8 to system library path..."
+            ln -s /usr/local/cuda/lib64/libcudnn.so.8 /usr/lib/x86_64-linux-gnu/libcudnn.so.8
+            ldconfig
+          fi
+   
      
       # ② 安装 Python 3.10
       - name: Set up Python 3.10
