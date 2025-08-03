@@ -61,17 +61,30 @@ The script builds PyTorch with CUDA 12.8, targets sm_120, and writes the resulti
 
 ## 📂 Project Structure
 ```
+├── .github/                       # GitHub workflows & issue templates
+│ ├── workflows/
+│ │ └── test-install.yml           # CI workflow: test install from .whl
+│ └── ISSUE_TEMPLATE/
+│   ├── bug_report.yaml            # Issue template: bug report
+│   ├── config.yml                 # Issue template config
+│   └── feature_request.yaml       # Issue template: feature request
+│
 ├── examples/
-│ ├── demo_tensor_cuda.py   # Simple CUDA tensor check
-│ └── verify_install.py     # Full verification test
+│ ├── demo_tensor_cuda.py          # Demo: test tensor on GPU
+│ └── verify_install.py            # Verifies torch installation & CUDA
+│
 ├── scripts/
-│ └── build_pytorch.sh      # Full build script from source
-├── install_from_whl.sh     # Quick install and verify script
-├── requirements.txt        # Python package dependencies
-├── build_info.md           # Build environment & CUDA info
-├── CHANGELOG.md            # Release notes
-├── CONTRIBUTING.md         # Contribution guide
-└── LICENSE                 # MIT License
+│ ├── build_pytorch.sh              # Script to build PyTorch from source
+│ └── upload_release.py             # Helper to upload .whl to GitHub release
+│
+├── requirements.txt                # Python dependency list (no torch)
+├── install_from_whl.sh             # One-line installer using .whl
+├── build_info.md                   # Build config & environment metadata
+├── CHANGELOG.md                    # Version history
+├── CONTRIBUTING.md                 # Contribution guidelines
+├── LICENSE                         # License (MIT/Apache/etc.)
+├── .gitignore                      # Git ignored files
+└── README.md                       # Project overview & installation guide
 ```
 
 ## 📦 Release Files
@@ -80,6 +93,11 @@ Latest version:
 [torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl]
 (https://github.com/Yyyzk123/pytorch-cuda128-sm120/releases/download/v2.9.0-sm120/torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl)
 
+## 🐛 Found a Bug or Have a Feature Request?
+We're happy to improve this repo with you!
+- 👉 [Submit a Bug Report](https://github.com/Yyyzk123/YOUR_REPO_NAME/issues/new?template=bug_report.yaml)
+- ✨ [Request a Feature](https://github.com/Yyyzk123/YOUR_REPO_NAME/issues/new?template=feature_request.yaml)
+> Please check [CONTRIBUTING.md](CONTRIBUTING.md) before submitting.
 
 ## 📓 Changelog
 See [CHANGELOG.md](./CHANGELOG.md) for update history. 
