@@ -7,3 +7,5 @@
 - 💬 Feedback and issues are welcome via [GitHub Issues](https://github.com/Yyyzk123/pytorch-cuda128-sm120/issues)
 
 
+## [v2.9.0-sm120] - 2025-08-03
+- 🛠️ Added: `requirements.txt`
