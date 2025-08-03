@@ -11,33 +11,34 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: nvidia/cuda:12.8.0-runtime-ubuntu22.04   # CUDA 12.8 runtime
-      # (no --gpus all; runner no GPU)
+      image: nvidia/cuda:12.8.0-runtime-ubuntu22.04
 
     steps:
       - uses: actions/checkout@v4
         name: Checkout repository
 
-      # ① 系统依赖 + cuDNN + OpenBLAS
+      # ① 安装系统依赖 + cuDNN + OpenBLAS + NUMA + OpenMP
       - name: Install system dependencies, cuDNN, OpenBLAS
         run: |
           set -e
           apt-get update
           apt-get install -y wget curl python3-pip software-properties-common gnupg ca-certificates
 
-          # Add NVIDIA keyring (adds repo & key)
+          # ➕ 必需依赖，修复 torch._C 加载失败
+          apt-get install -y libnuma1 libgomp1
+
+          # Add NVIDIA keyring
           wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb
           dpkg -i cuda-keyring_1.1-1_all.deb
           rm cuda-keyring_1.1-1_all.deb
 
-          # Install cuDNN 8 runtime (matches CUDA 12.8)
           apt-get update
           apt-get install -y libcudnn8
 
-          # Install OpenBLAS runtime & headers (provides libopenblas.so.0)
+          # OpenBLAS（用于 PyTorch 构建中默认使用）
           apt-get install -y libopenblas0-pthread libopenblas-dev
 
-      # ② Python 3.10
+      # ② 安装 Python 3.10
       - name: Set up Python 3.10
         run: |
           set -e
@@ -47,7 +48,7 @@ jobs:
           update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
           curl -sS https://bootstrap.pypa.io/get-pip.py | python
 
-      # ③ 下载 wheel
+      # ③ 下载 wheel 文件
       - name: Download wheel from latest GitHub release
         id: download
         run: |
@@ -64,19 +65,28 @@ jobs:
           WHEEL_NAME=$(basename "$RELEASE_URL")
           wget "$RELEASE_URL" -O "dist/$WHEEL_NAME"
           echo "WHEEL_NAME=$WHEEL_NAME" >> "$GITHUB_OUTPUT"
+          
+          # ➕ 输出 SHA256 校验和（非强制）
+          sha256sum "dist/$WHEEL_NAME"
 
-      # ④ 安装并验证
+      # ④ 安装 wheel
       - name: Install from wheel
         if: steps.download.outputs.WHEEL_NAME
         run: |
           chmod +x install_from_whl.sh
           ./install_from_whl.sh "dist/${{ steps.download.outputs.WHEEL_NAME }}"
 
+      # ⑤ 验证 torch + CUDA 正常性
       - name: Verify installation
         if: steps.download.outputs.WHEEL_NAME
         run: |
+          echo "Running demo_tensor_cuda.py..."
           python examples/demo_tensor_cuda.py
 
+          echo "Running CUDA check..."
+          python -c "import torch; print('✅ torch.cuda.is_available():', torch.cuda.is_available())"
+
+      # ✅ 结束标记
       - name: Final check
         if: always()
         run: echo "✅ Test complete! Believe in light, your PyTorch wheel is ready to shine!"
