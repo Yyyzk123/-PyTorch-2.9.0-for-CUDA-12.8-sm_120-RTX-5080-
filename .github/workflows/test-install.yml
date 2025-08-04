@@ -24,8 +24,13 @@ jobs:
       run: |
         set -e
         apt-get update -qq
-        apt-get install -y --no-install-recommends wget curl ca-certificates python3-pip tar
-          wget curl ca-certificates python3-pip tar xz-utils       
+        apt-get install -y --no-install-recommends \
+          wget \
+          curl \
+          ca-certificates \
+          python3-pip \
+          tar \
+          xz-utils
                    
         # ↓ 下载并安装 cuDNN 8.9.7（适配 CUDA 12）
         CUDNN_VER=8.9.7.29
