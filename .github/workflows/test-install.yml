@@ -10,38 +10,43 @@ jobs:
   install-test:
     runs-on: ubuntu-latest
 
+    # 使用官方 CUDA 12.8.1 + cuDNN Ubuntu 24.04 devel 镜像（预装 cuDNN 9, 含 tools）
     container:
       image: nvidia/cuda:12.8.1-cudnn-devel-ubuntu24.04
 
     steps:
+    # 0️⃣ 取仓库代码
     - name: Checkout repository
       uses: actions/checkout@v4
       
+    # 1️⃣ 安装系统依赖（最小化, 用预装 cuDNN, 修复 ldconfig 无 sudo）
     - name: Install system deps (minimal, repair ldconfig)
       run: |
         set -e
         apt-get update -qq
         
-        # 增强修复 ldconfig segfault (Ubuntu 24.04 Docker bug)
-        sudo dpkg --configure -a || true
-        sudo apt-get install -f -y || true
-        sudo rm -f /var/cache/ldconfig/aux-cache
-        sudo apt-get purge libc-bin libc6 -y || true
-        sudo apt-get install --reinstall libc-bin libc6 -y || true
-        sudo /sbin/ldconfig || true
-        sudo apt-get clean
+        # 增强修复 ldconfig segfault (Ubuntu 24.04 Docker bug, root 无 sudo)
+        dpkg --configure -a || true
+        apt-get install -f -y || true
+        rm -f /var/cache/ldconfig/aux-cache
+        apt-get purge libc-bin libc6 -y || true
+        apt-get install --reinstall libc-bin libc6 -y || true
+        /sbin/ldconfig || true
+        apt-get clean
         
-        # 最小依赖（避免 triggers，镜像预装 cuDNN 9）
+        # 最小依赖（避免 triggers，用镜像预装 cuDNN 9）
         apt-get install -y --no-install-recommends \
-            wget curl ca-certificates python3-pip tar
+            wget curl ca-certificates python3-pip
         
+    # 2️⃣ 安装 micromamba 并创建 Python 3.10 环境（超快）
     - name: Set up micromamba (Python 3.10)
       run: |
         curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
         ./bin/micromamba create -y -p $HOME/py310 python=3.10
         echo "$HOME/py310/bin" >> $GITHUB_PATH
-        export PATH="$HOME/py310/bin:$PATH"
+        export PATH="$HOME/py310/bin:$PATH"  # 显式 export，确保后续可用
 
+    # 3️⃣ 下载最新 Release 中的两个 .whl 文件（torch & torchvision）
     - name: Download wheels from latest GitHub Release
       id: download
       run: |
@@ -59,6 +64,7 @@ jobs:
           sha256sum dist/"$FILE"
         done
 
+    # 4️⃣ 安装 .whl 与其他依赖
     - name: Install wheels & Python deps
       run: |
         export PATH="$HOME/py310/bin:$PATH"
@@ -66,6 +72,7 @@ jobs:
         python -m pip install dist/torchvision-*.whl
         python -m pip install -r requirements.txt
 
+    # 5️⃣ 运行 Demo & 打印环境信息
     - name: Verify installation
       run: |
         export PATH="$HOME/py310/bin:$PATH"
