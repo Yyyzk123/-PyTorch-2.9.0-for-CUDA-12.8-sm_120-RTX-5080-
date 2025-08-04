@@ -16,12 +16,4 @@ MarkupSafe==3.0.2                 # ✅ >=3.0.2
 
 
 
-# Additional dependencies required by Gaussian Splatting, SplaTAM, or common 3D tools
 
-numpy==2.2.6
-tqdm==4.65.0
-matplotlib==3.10.3
-scipy==1.15.3
-opencv-python==4.11.0.86
-imageio==2.37.0
-wandb==0.21.0
