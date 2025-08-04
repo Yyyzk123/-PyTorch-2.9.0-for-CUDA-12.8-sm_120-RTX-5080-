@@ -10,7 +10,7 @@ jobs:
   install-test:
     runs-on: ubuntu-latest
 
-    # 使用官方 CUDA 12.8.1 + cuDNN Ubuntu 24.04 运行时镜像（2025/08/04 已存在）
+    # 使用官方 CUDA 12.8.1 + cuDNN Ubuntu 24.04 运行时镜像
     container:
       image: nvidia/cuda:12.8.1-cudnn-runtime-ubuntu24.04
 
@@ -19,8 +19,8 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    # 1️⃣ 添加 NVIDIA cuDNN 9 APT 仓库并安装（兼容 CUDA 12.8，Ubuntu 24.04 原生支持）
-    - name: Install system & cuDNN 9 runtime
+    # 1️⃣ 安装系统依赖 & cuDNN 9 via tarball（Ubuntu 24.04 无 network repo）
+    - name: Install system & cuDNN 9 tarball
       run: |
         set -e
         apt-get update -qq
@@ -28,23 +28,17 @@ jobs:
         # ==== ① 基础依赖 ====
         apt-get install -y --no-install-recommends \
             wget curl ca-certificates bzip2 \
-            libnuma1 libgomp1 libopenblas0-pthread python3-pip
-    
-        # ==== ② cuDNN 9 公钥 & 源 ====
-        wget -qO- https://developer.download.nvidia.com/compute/cudnn/repos/ubuntu2404/x86_64/cudnn-ubuntu2404.key \
-          | tee /etc/apt/trusted.gpg.d/cudnn.gpg
-        echo "deb https://developer.download.nvidia.com/compute/cudnn/repos/ubuntu2404/x86_64/ /" \
-          | tee /etc/apt/sources.list.d/cudnn.list
-    
-        apt-get update -qq
-    
-        # ==== ③ 安装与 CUDA-12.8 匹配的 cuDNN 9 ====
-        # 用 apt-cache 取最新 9.* 版本号（兼容所有 CUDA 12.x，包括 12.8）
-        CUDNN_VER=$(apt-cache madison libcudnn9-cuda-12 | awk '{print $3}' | head -1)
-        echo "Installing cuDNN version: $CUDNN_VER"
-        apt-get install -y --no-install-recommends \
-            libcudnn9-cuda-12="$CUDNN_VER" \
-            libcudnn9-dev-cuda-12="$CUDNN_VER"
+            libnuma1 libgomp1 libopenblas0-pthread python3-pip tar
+        
+        # ==== ② 下载 & 安装 cuDNN 9 tarball (latest 9.3.0 for CUDA 12.x) ====
+        CUDNN_VERSION="9.3.0.75"
+        wget -q https://developer.download.nvidia.com/compute/cudnn/9.3.0/local_installers/9.3.0/cudnn-linux-x86_64-${CUDNN_VERSION}_cuda12-archive.tar.xz
+        tar -xvf cudnn-linux-x86_64-${CUDNN_VERSION}_cuda12-archive.tar.xz
+        sudo cp -P cudnn-linux-x86_64-${CUDNN_VERSION}_cuda12-archive/include/* /usr/local/cuda/include/
+        sudo cp -P cudnn-linux-x86_64-${CUDNN_VERSION}_cuda12-archive/lib/* /usr/local/cuda/lib64/
+        sudo chmod a+r /usr/local/cuda/lib64/libcudnn*
+        sudo ldconfig
+        echo "cuDNN installed: $(ls /usr/local/cuda/lib64/libcudnn.so.*)"
         
     # 2️⃣ 安装 micromamba 并创建 Python 3.10 环境（超快）
     - name: Set up micromamba (Python 3.10)
@@ -52,7 +46,7 @@ jobs:
         curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
         ./bin/micromamba create -y -p $HOME/py310 python=3.10
         echo "$HOME/py310/bin" >> $GITHUB_PATH
-        export PATH="$HOME/py310/bin:$PATH"  # 显式 export，确保后续步骤可用
+        export PATH="$HOME/py310/bin:$PATH"  # 显式 export，确保后续可用
 
     # 3️⃣ 下载最新 Release 中的两个 .whl 文件（torch & torchvision）
     - name: Download wheels from latest GitHub Release
