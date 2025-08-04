@@ -42,32 +42,7 @@ NVIDIA GeForce RTX 5080 Laptop GPU
 
 ---
 
-## ✨ Features
-- ✅ Built from source: PyTorch v2.9.0 + gitc665594
-- ✅ CUDA 12.8 compatible
-- ✅ Supports sm_120 (RTX 5080, Ada Lovelace)
-- ✅ Verified on Ubuntu 24.04 + Python 3.10.18
-- ✅ Matched with torchvision==0.24.0a0+f52c4f1
-- ✅ Reproducible environment defined in requirements.txt
-
-## 📋 Requirements
-- Linux x86_64 (Recommended: Ubuntu 24.04)
-- Python 3.10.18 (via Miniconda or virtualenv)
-- CUDA 12.8 installed (NVIDIA Driver ≥ 570.153.02)
-- NVIDIA GPU supporting `sm_120` (e.g., RTX 5080 Laptop)
-- pip >= 21.0
-> ⚠️ **Warning**  
-> Make sure your CUDA path is correctly set:  
-> 
-> ```bash
-> export PATH=/usr/local/cuda-12.8/bin:$PATH
-> export LD_LIBRARY_PATH=/usr/local/cuda-12.8/lib64:$LD_LIBRARY_PATH
-> ```
-
-## 🧪 Tested on
-- ✅ PyTorch GPU Acceleration (verified)
-- ✅ Gaussian Splatting
-- ✅ SplaTAM
+## 📄 For full build details (OS, CUDA, commit hash, hardware), see [build_info.md](./build_info.md)
 
 ## 📂 Project Structure
 ```
