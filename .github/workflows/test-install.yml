@@ -10,45 +10,39 @@ jobs:
   install-test:
     runs-on: ubuntu-latest
 
+    # CUDA 12.8.1 运行时镜像（含 cuDNN 9）
     container:
-      image: nvidia/cuda:12.8.1-cudnn-devel-ubuntu24.04
+      image: nvidia/cuda:12.8.1-cudnn-runtime-ubuntu24.04
 
     steps:
+    # 0️⃣ 取仓库代码
     - name: Checkout repository
       uses: actions/checkout@v4
-      
-    - name: Install system deps & cuDNN 8 tarball
+
+    # 1️⃣ 安装基础依赖并注入 cuDNN 8
+    - name: Install system deps & cuDNN 8
       run: |
         set -e
         apt-get update -qq
-        
-        # 修复 ldconfig segfault (Ubuntu 24.04 Docker bug, root 无 sudo)
-        dpkg --configure -a || true
-        apt-get install -f -y || true
-        rm -f /var/cache/ldconfig/aux-cache
-        apt-get purge libc-bin libc6 -y || true
-        apt-get install --reinstall libc-bin libc6 -y || true
-        /sbin/ldconfig || true
-        apt-get clean
-        
-        # 最小依赖（避免 triggers）
-        apt-get install -y --no-install-recommends \
-            wget curl ca-certificates python3-pip tar
-        
-        # 安装 cuDNN 8.9.7 tarball（wheel 硬依赖 libcudnn.so.8）
-        tar -xvf cudnn/cudnn-linux-x86_64-8.9.7.29_cuda12-archive.tar.xz
-        cp -P cudnn-linux-x86_64-8.9.7.29_cuda12-archive/include/* /usr/local/cuda/include/
-        cp -P cudnn-linux-x86_64-8.9.7.29_cuda12-archive/lib/* /usr/local/cuda/lib64/
+        apt-get install -y --no-install-recommends wget curl ca-certificates python3-pip tar
+    
+        # ↓ 下载并安装 cuDNN 8.9.7（适配 CUDA 12）
+        CUDNN_VER=8.9.7.29
+        CUDA_VER=12
+        wget -q https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/linux-x86_64/cudnn-linux-x86_64-${CUDNN_VER}_cuda${CUDA_VER}-archive.tar.xz
+        tar -xf cudnn-linux-x86_64-${CUDNN_VER}_cuda${CUDA_VER}-archive.tar.xz
+        cp -P cudnn-linux-x86_64-${CUDNN_VER}_cuda${CUDA_VER}-archive/include/* /usr/local/cuda/include/
+        cp -P cudnn-linux-x86_64-${CUDNN_VER}_cuda${CUDA_VER}-archive/lib/*      /usr/local/cuda/lib64/
         chmod a+r /usr/local/cuda/lib64/libcudnn*
-        /sbin/ldconfig
-        echo "cuDNN installed: $(ls /usr/local/cuda/lib64/libcudnn.so.*)"
+        ldconfig
+        echo "Installed cuDNN libs:"; ls /usr/local/cuda/lib64/libcudnn.so.*
+
         
     - name: Set up micromamba (Python 3.10)
       run: |
         curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
         ./bin/micromamba create -y -p $HOME/py310 python=3.10
         echo "$HOME/py310/bin" >> $GITHUB_PATH
-        export PATH="$HOME/py310/bin:$PATH"
 
     - name: Download wheels from latest GitHub Release
       id: download
@@ -58,6 +52,7 @@ jobs:
         REPO="${{ github.repository }}"
         WHL_URLS=$(curl -s https://api.github.com/repos/$REPO/releases/latest \
           | grep browser_download_url | grep '.whl"' | cut -d '"' -f 4)
+        [ -z "$WHL_URLS" ] && { echo "::error ::No wheels found in latest release"; exit 1; }
         echo "Found wheels:"
         echo "$WHL_URLS"
         for URL in $WHL_URLS; do
@@ -69,17 +64,15 @@ jobs:
 
     - name: Install wheels & Python deps
       run: |
-        export PATH="$HOME/py310/bin:$PATH"
-        python -m pip install dist/torch-*.whl
-        python -m pip install dist/torchvision-*.whl
-        python -m pip install -r requirements.txt
+        python -m pip install --no-cache-dir dist/torch-*.whl
+        python -m pip install --no-cache-dir dist/torchvision-*.whl
+        python -m pip install --no-cache-dir -r requirements.txt
 
     - name: Verify installation
       run: |
-        export PATH="$HOME/py310/bin:$PATH"
         python examples/demo_tensor_cuda.py || true
         python - <<'PY'
-        import torch, platform, sys
+        import torch, platform
         print("Python  :", platform.python_version())
         print("Torch   :", torch.__version__)
         print("CUDA OK :", torch.cuda.is_available())
@@ -88,7 +81,8 @@ jobs:
             print("sm arch :", torch.cuda.get_device_capability())
         else:
             print("GPU Name: (no GPU, CI runner)")
-        print("TorchVision:", __import__('torchvision').__version__)
+        import torchvision
+        print("TorchVision:", torchvision.__version__)
         PY
 
     - name: Final result
