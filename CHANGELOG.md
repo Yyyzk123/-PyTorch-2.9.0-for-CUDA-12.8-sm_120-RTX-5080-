@@ -4,6 +4,7 @@
 - 📄 Added: `build_info.md` (includes ✨ Features & 📋 Requirements)
 - 🧼 Refined: `README.md` for clearer Quick Start module
 - 📁 Organized: project structure visual in `README.md`
+- 📦 Added: `.whl` binaries for PyTorch & torchvision
 
 ## [v2.9.0-sm120] - 2025-08-03
 - 🛠️ Added: `requirements.txt`
