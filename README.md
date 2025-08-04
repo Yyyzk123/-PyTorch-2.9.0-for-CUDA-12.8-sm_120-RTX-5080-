@@ -42,8 +42,6 @@ NVIDIA GeForce RTX 5080 Laptop GPU
 
 ---
 
-## 📄 For full build details (OS, CUDA, commit hash, hardware), see [build_info.md](./build_info.md)
-
 ## 📂 Project Structure
 ```
 ├── .github/                       # GitHub workflows & issue templates
