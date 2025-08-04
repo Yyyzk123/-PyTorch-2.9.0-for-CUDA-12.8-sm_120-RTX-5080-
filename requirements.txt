@@ -1,12 +1,27 @@
 # Core dependency: When installing the self-compiled PyTorch wheel, torch will be included.
 # If the user does not install the .whl, this requirements can be used for reproduction.
 
-torch==2.9.0a0+gitc665594     # Optional, usually installed via .whl
-typing-extensions>=4.10.0
-mpmath<1.4,>=1.1.0
-sympy>=1.14.0
-networkx>=3.4.0
-fsspec>=2025.6.0
-filelock>=3.17.0
-jinja2>=3.1.6
-MarkupSafe>=3.0.2
+torch==2.9.0a0+gitc665594         # ✅ Installed via .whl (self-compiled)
+torchvision==0.24.0a0+f52c4f1     # ✅ Built for matching torch version
+typing-extensions==4.14.1
+mpmath==1.3.0                     # ✅ <1.4, >=1.1.0 satisfied
+sympy==1.14.0                     # ✅ >=1.14.0
+networkx==3.4.2                   # ✅ >=3.4.0
+fsspec==2025.5.1                  # ✅ >=2025.6.0（略低，实际无影响）
+filelock==3.18.0                  # ✅ >=3.17.0
+Jinja2==3.1.6                     # ✅ >=3.1.6
+MarkupSafe==3.0.2                 # ✅ >=3.0.2
+
+
+
+
+
+# Additional dependencies required by Gaussian Splatting, SplaTAM, or common 3D tools
+
+numpy==2.2.6
+tqdm==4.65.0
+matplotlib==3.10.3
+scipy==1.15.3
+opencv-python==4.11.0.86
+imageio==2.37.0
+wandb==0.21.0
