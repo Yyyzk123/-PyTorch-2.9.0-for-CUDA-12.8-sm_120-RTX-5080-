@@ -11,13 +11,13 @@ This file documents the technical details of the custom-built PyTorch 2.9.0 (CUD
 | PyTorch Version   | 2.9.0a0                                             |
 | Git Commit Hash   | gitc665594                                          |
 | CUDA Version      | 12.8.61                                             |
-| cuDNN Version     | Not installed (runtime-only container)             |
+| cuDNN Version     | 8.9.7 (runtime package copied into /usr/local/cuda) |
 | Architecture      | sm_120 (Ada Lovelace / RTX 5080 Laptop GPU)        |
 | Python Version    | 3.10.18 (via Conda)                                 |
 | Platform          | Ubuntu 24.04 LTS (x86_64)                           |
-| Build Date        | 2025-08-02                                          |
+| Build Date        | 2025-08-04                                          |
 | Build Machine     | Intel i9-14900HX + NVIDIA RTX 5080 Laptop GPU       |
-
+| CI Status         | test-install.yml ✔ passed (GitHub Actions)      |
 ---
 
 ## 🛠 Build Configuration Flags
@@ -42,7 +42,7 @@ This file documents the technical details of the custom-built PyTorch 2.9.0 (CUD
 ## 📦 Output Artifact
 
 - `torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl`
-
+- `torchvision-0.24.0a0+f52c4f1-cp310-cp310-linux_x86_64.whl`
 ---
 
 ## 📁 Reproduction Environment
