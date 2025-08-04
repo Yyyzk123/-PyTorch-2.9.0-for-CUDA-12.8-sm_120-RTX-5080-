@@ -31,8 +31,18 @@ jobs:
           python3-pip \
           tar \
           xz-utils \
-          bzip2 
-          
+          bzip2 \
+          libopenblas-dev \
+          libomp-dev \
+          libjpeg-dev \
+          libpng-dev \
+          libglib2.0-0 \
+          libsm6 \
+          libxext6 \
+          libxrender1 \
+          libatlas-base-dev \
+          ffmpeg
+                  
         # ↓ 下载并安装 cuDNN 8.9.7（适配 CUDA 12）
         CUDNN_VER=8.9.7.29
         CUDA_VER=12
