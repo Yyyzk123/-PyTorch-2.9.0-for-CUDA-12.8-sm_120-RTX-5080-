@@ -8,6 +8,8 @@
 ## 🚀 Overview
 This repository provides a pre-built PyTorch 2.9.0 package compiled with CUDA 12.8 and `sm_120` architecture, targeting RTX 5080 Laptop GPUs (Ada Lovelace).
 该项目提供适配 CUDA 12.8 + sm_120 架构（RTX 5080）的 PyTorch 2.9.0 编译版本，已通过 Gaussian Splatting、SplaTAM 等实际任务验证。欢迎反馈问题或提交 PR！
+- Feedback and issues are welcome via [GitHub Issues](https://github.com/Yyyzk123/pytorch-cuda128-sm120/issues)
+Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.  
 > 🐧 **Tested on Ubuntu  24.04 (Linux x86_64)**  
 > Compatible with Ubuntu-based systems (including WSL2). Other Linux distributions may require manual setup.
 >Follow me. The Windows version will be updated soon...
@@ -99,10 +101,6 @@ It is recommended to use the nvidia/cuda:12.8.0-runtime-ubuntu24.04 image for de
 
 ## 📓 Changelog
 See [CHANGELOG.md](./CHANGELOG.md) for update history. 
-
-## 🙌 Contributing
-- Feedback and issues are welcome via [GitHub Issues](https://github.com/Yyyzk123/pytorch-cuda128-sm120/issues)
-Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.  
 
 ## 👉 See [build_info.md](./build_info.md) for full build details (OS, CUDA, commit hash, etc).
 
