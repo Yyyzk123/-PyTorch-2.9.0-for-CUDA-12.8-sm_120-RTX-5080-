@@ -22,7 +22,8 @@ jobs:
         apt-get update -qq
         apt-get install -y --no-install-recommends \
             wget curl gnupg ca-certificates software-properties-common \
-            libnuma1 libgomp1 libopenblas0-pthread libopenblas-dev
+            libnuma1 libgomp1 libopenblas0-pthread libopenblas-dev \
+            python3-pip
         python3 -m pip install --upgrade pip      # 系统自带 Py3.12，仅用于拉 micromamba
 
     # 2️⃣ 安装 micromamba 并创建 py310 env  （<5 MB，10 s 内完成）
