@@ -18,24 +18,31 @@ jobs:
     # 0️⃣ 取仓库代码
     - name: Checkout repository
       uses: actions/checkout@v4
-
-    # 1️⃣ 安装基础系统依赖
-    - name: Install system packages
+      
+    # 1️⃣ 添加 NVIDIA cuDNN 8 APT 仓库并安装
+    - name: Install system & cuDNN 8 runtime
       run: |
         set -e
         apt-get update -qq
+    
+        # ==== ① 基础依赖 ====
         apt-get install -y --no-install-recommends \
             wget curl ca-certificates bzip2 \
-            libnuma1 libgomp1 libopenblas0-pthread \
-            python3-pip
-            
-    # 1️⃣➕ 追加：给 cuDNN 9 做向后兼容软链
-    - name: Provide cuDNN 8 compatibility symlink
-      run: |
-        ln -s /usr/lib/x86_64-linux-gnu/libcudnn.so.9          /usr/lib/x86_64-linux-gnu/libcudnn.so.8          || true
-        ln -s /usr/lib/x86_64-linux-gnu/libcudnn_ops_infer.so.9 /usr/lib/x86_64-linux-gnu/libcudnn_ops_infer.so.8 || true
-        ln -s /usr/lib/x86_64-linux-gnu/libcudnn_cnn_infer.so.9 /usr/lib/x86_64-linux-gnu/libcudnn_cnn_infer.so.8 || true
-        ldconfig
+            libnuma1 libgomp1 libopenblas0-pthread python3-pip
+    
+        # ==== ② cuDNN 8 公钥 & 源 ====
+        wget -qO- https://developer.download.nvidia.com/compute/cudnn/repos/ubuntu2404/x86_64/cudnn-ubuntu2404.key \
+          | tee /etc/apt/trusted.gpg.d/cudnn.gpg
+        echo "deb https://developer.download.nvidia.com/compute/cudnn/repos/ubuntu2404/x86_64/ /" \
+          | tee /etc/apt/sources.list.d/cudnn.list
+    
+        apt-get update -qq
+    
+        # ==== ③ 安装与 CUDA-12.8 匹配的 cuDNN 8 ====
+        # 8.9.x 仍可与 CUDA 12.8 配合使用；用 apt-cache 取最新 8.* 版本号
+        apt-get install -y --no-install-recommends \
+            libcudnn8=8.9.7.*-1+cuda12.4 \
+            libcudnn8-dev=8.9.7.*-1+cuda12.4
         
     # 2️⃣ 安装 micromamba 并创建 Python 3.10 环境（超快）
     - name: Set up micromamba (Python 3.10)
