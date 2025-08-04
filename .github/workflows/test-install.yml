@@ -30,8 +30,9 @@ jobs:
           ca-certificates \
           python3-pip \
           tar \
-          xz-utils
-                   
+          xz-utils \
+          bzip2 
+          
         # ↓ 下载并安装 cuDNN 8.9.7（适配 CUDA 12）
         CUDNN_VER=8.9.7.29
         CUDA_VER=12
