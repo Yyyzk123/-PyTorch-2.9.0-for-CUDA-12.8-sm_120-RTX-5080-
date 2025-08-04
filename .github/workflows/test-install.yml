@@ -10,45 +10,38 @@ jobs:
   install-test:
     runs-on: ubuntu-latest
 
-    # 使用官方 CUDA 12.8.1 + cuDNN Ubuntu 24.04 运行时镜像
     container:
-      image: nvidia/cuda:12.8.1-cudnn-runtime-ubuntu24.04
+      image: nvidia/cuda:12.8.1-cudnn-devel-ubuntu24.04
 
     steps:
-    # 0️⃣ 取仓库代码
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    # 1️⃣ 安装系统依赖 & cuDNN 9 via tarball（Ubuntu 24.04 无 network repo）
-    - name: Install system & cuDNN 9 tarball
+    - name: Install system deps (minimal, repair ldconfig)
       run: |
         set -e
         apt-get update -qq
-    
-        # ==== ① 基础依赖 ====
+        
+        # 增强修复 ldconfig segfault (Ubuntu 24.04 Docker bug)
+        sudo dpkg --configure -a || true
+        sudo apt-get install -f -y || true
+        sudo rm -f /var/cache/ldconfig/aux-cache
+        sudo apt-get purge libc-bin libc6 -y || true
+        sudo apt-get install --reinstall libc-bin libc6 -y || true
+        sudo /sbin/ldconfig || true
+        sudo apt-get clean
+        
+        # 最小依赖（避免 triggers，镜像预装 cuDNN 9）
         apt-get install -y --no-install-recommends \
-            wget curl ca-certificates bzip2 \
-            libnuma1 libgomp1 libopenblas0-pthread python3-pip tar
+            wget curl ca-certificates python3-pip tar
         
-        # ==== ② 下载 & 安装 cuDNN 9 tarball (latest 9.3.0 for CUDA 12.x) ====
-        CUDNN_VERSION="9.3.0.75"
-        wget -q https://developer.download.nvidia.com/compute/cudnn/9.3.0/local_installers/9.3.0/cudnn-linux-x86_64-${CUDNN_VERSION}_cuda12-archive.tar.xz
-        tar -xvf cudnn-linux-x86_64-${CUDNN_VERSION}_cuda12-archive.tar.xz
-        sudo cp -P cudnn-linux-x86_64-${CUDNN_VERSION}_cuda12-archive/include/* /usr/local/cuda/include/
-        sudo cp -P cudnn-linux-x86_64-${CUDNN_VERSION}_cuda12-archive/lib/* /usr/local/cuda/lib64/
-        sudo chmod a+r /usr/local/cuda/lib64/libcudnn*
-        sudo ldconfig
-        echo "cuDNN installed: $(ls /usr/local/cuda/lib64/libcudnn.so.*)"
-        
-    # 2️⃣ 安装 micromamba 并创建 Python 3.10 环境（超快）
     - name: Set up micromamba (Python 3.10)
       run: |
         curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
         ./bin/micromamba create -y -p $HOME/py310 python=3.10
         echo "$HOME/py310/bin" >> $GITHUB_PATH
-        export PATH="$HOME/py310/bin:$PATH"  # 显式 export，确保后续可用
+        export PATH="$HOME/py310/bin:$PATH"
 
-    # 3️⃣ 下载最新 Release 中的两个 .whl 文件（torch & torchvision）
     - name: Download wheels from latest GitHub Release
       id: download
       run: |
@@ -66,7 +59,6 @@ jobs:
           sha256sum dist/"$FILE"
         done
 
-    # 4️⃣ 安装 .whl 与其他依赖
     - name: Install wheels & Python deps
       run: |
         export PATH="$HOME/py310/bin:$PATH"
@@ -74,7 +66,6 @@ jobs:
         python -m pip install dist/torchvision-*.whl
         python -m pip install -r requirements.txt
 
-    # 5️⃣ 运行 Demo & 打印环境信息
     - name: Verify installation
       run: |
         export PATH="$HOME/py310/bin:$PATH"
