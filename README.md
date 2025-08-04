@@ -96,7 +96,7 @@ You can download pre-built wheels from the GitHub Releases Page.
 Latest version: 
 [torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl]
 (https://github.com/Yyyzk123/pytorch-cuda128-sm120/releases/download/v2.9.0-sm120/torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl)
-⚠️Note: This PyTorch .whl depends on glibc >= 2.38 and can only run on systems with Ubuntu 24.04 or higher.
+- ⚠️Note: This PyTorch .whl depends on glibc >= 2.38 and can only run on systems with Ubuntu 24.04 or higher.
 It is recommended to use the nvidia/cuda:12.8.0-runtime-ubuntu24.04 image for deployment.
 
 ## 📓 Changelog
