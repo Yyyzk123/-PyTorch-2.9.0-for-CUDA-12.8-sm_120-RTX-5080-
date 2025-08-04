@@ -5,36 +5,42 @@
 [![PyTorch 2.9.0](https://img.shields.io/badge/PyTorch-2.9.0-orange)](https://pytorch.org/)
 [![GitHub stars](https://img.shields.io/github/stars/Yyyzk123/pytorch-cuda128-sm120?style=social)](https://github.com/Yyyzk123/pytorch-cuda128-sm120)
 
-## 🚀 Overview
-This repository provides a pre-built PyTorch 2.9.0 package compiled with CUDA 12.8 and `sm_120` architecture, targeting RTX 5080 Laptop GPUs (Ada Lovelace).
-该项目提供适配 CUDA 12.8 + sm_120 架构（RTX 5080）的 PyTorch 2.9.0 编译版本，已通过 Gaussian Splatting、SplaTAM 等实际任务验证。欢迎反馈问题或提交 PR！
-- Feedback and issues are welcome via [GitHub Issues](https://github.com/Yyyzk123/pytorch-cuda128-sm120/issues)
-Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.  
-> 🐧 **Tested on Ubuntu  24.04 (Linux x86_64)**  
-> Compatible with Ubuntu-based systems (including WSL2). Other Linux distributions may require manual setup.
->Follow me. The Windows version will be updated soon...
+> ⚡ **Prebuilt PyTorch + torchvision for Ada GPUs (e.g., RTX 5080)**  
+> 🔧 **Built for CUDA 12.8 · Fully Offline Install · Verified in Gaussian Splatting / SplaTAM**  
+> 😣 **Feedback & Issues**: Use [GitHub Issues](https://github.com/Yyyzk123/pytorch-cuda128-sm120/issues)  
+> 🙌 **Contribute**: See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines
 
-## 🧪 Quick Install (3 Steps)
+---
+
+## 🚀 Quick Start
+
+### 📥 Step 1: Download `.whl` files
+- 🔗 [torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl](https://github.com/Yyyzk123/pytorch-cuda128-sm120/releases/download/v2.9.0-sm120/torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl)
+- 🔗 [torchvision-0.24.0a0+f52c4f1-cp310-linux_x86_64.whl](https://github.com/Yyyzk123/pytorch-cuda128-sm120/releases/download/v2.9.0-sm120/torchvision-0.24.0a0+f52c4f1-cp310-linux_x86_64.whl)
+
+---
+
+### 💽 Step 2: Install into Python 3.10 environment
+
 ```bash
-# Step 1: Download
-wget https://github.com/Yyyzk123/pytorch-cuda128-sm120/releases/download/v2.9.0-sm120/torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl
+conda create -n torch_env python=3.10 -y
+conda activate torch_env
 
-# Step 2: Install
-pip install torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl
-
-# Step 3: Verify
-python examples/verify_install.py       # or examples/demo_tensor_cuda.py
-
-# (Optional) Step 4: Run example verification script
-python examples/demo_tensor_cuda.py
+pip install ./torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl
+pip install ./torchvision-0.24.0a0+f52c4f1-cp310-linux_x86_64.whl
 ```
 
-## 🔧 Build from Source
-If you want to compile from source (e.g. custom patch, cross-platform), run:
+### ✅ Step 3: Verify installation
 ```bash
-bash scripts/build_pytorch.sh
+python -c "import torch; print(torch.__version__); print(torch.cuda.is_available()); print(torch.cuda.get_device_name(0))"
 ```
-The script builds PyTorch with CUDA 12.8, targets sm_120, and writes the resulting .whl to dist/.
+
+### 📌 Expected Output
+```bash
+2.9.0a0+gitc665594
+True
+NVIDIA GeForce RTX 5080 Laptop GPU
+```
 
 ## ✨ Features
 - ✅ Built from source: PyTorch v2.9.0 + gitc665594
