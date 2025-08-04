@@ -14,8 +14,12 @@
 ## 🚀 Quick Start （3 Steps)
 ---
 ### 📥 Step 1: Download `.whl` files
-- 🔗 [torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl](https://github.com/Yyyzk123/pytorch-cuda128-sm120/releases/download/v2.9.0-sm120/torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl)
-- 🔗 [torchvision-0.24.0a0+f52c4f1-cp310-linux_x86_64.whl](https://github.com/Yyyzk123/pytorch-cuda128-sm120/releases/download/v2.9.0-sm120/torchvision-0.24.0a0+f52c4f1-cp310-linux_x86_64.whl)
+
+| Package      | Version (tag)         | File Size | SHA256                                     |
+|--------------|------------------------|-----------|---------------------------------------------|
+| [`torch`](https://github.com/Yyyzk123/torch-cu128-sm120/releases/download/v2.9.0-sm120/torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl) | 2.9.0a0+gitc665594 | 235 MB   | `d8534c88263d8f184afea91dfc4feaf8ee2038ce526861a9f8868e716f8a158` |
+| [`torchvision`](https://github.com/Yyyzk123/torch-cu128-sm120/releases/download/v2.9.0-sm120/torchvision-0.24.0a0+f52c4f1-cp310-cp310-linux_x86_64.whl) | 0.24.0a0+f52c4f1   | 1.87 MB  | `40655e9c93425751e400de656f0c0ceb81383bfbe4f392edce5b56458892fb9f` |
+
 
 ### 💽 Step 2:  environment
 
