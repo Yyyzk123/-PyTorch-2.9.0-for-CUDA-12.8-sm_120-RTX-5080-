@@ -24,12 +24,19 @@ jobs:
       run: |
         set -e
         apt-get update -qq
-        # 追加 libcudnn8
         apt-get install -y --no-install-recommends \
             wget curl ca-certificates bzip2 \
             libnuma1 libgomp1 libopenblas0-pthread \
-            python3-pip \
-            libcudnn8=8.9.7.*-1+cuda12.4
+            python3-pip
+            
+    # 1️⃣➕ 追加：给 cuDNN 9 做向后兼容软链
+    - name: Provide cuDNN 8 compatibility symlink
+      run: |
+        ln -s /usr/lib/x86_64-linux-gnu/libcudnn.so.9          /usr/lib/x86_64-linux-gnu/libcudnn.so.8          || true
+        ln -s /usr/lib/x86_64-linux-gnu/libcudnn_ops_infer.so.9 /usr/lib/x86_64-linux-gnu/libcudnn_ops_infer.so.8 || true
+        ln -s /usr/lib/x86_64-linux-gnu/libcudnn_cnn_infer.so.9 /usr/lib/x86_64-linux-gnu/libcudnn_cnn_infer.so.8 || true
+        ldconfig
+        
     # 2️⃣ 安装 micromamba 并创建 Python 3.10 环境（超快）
     - name: Set up micromamba (Python 3.10)
       run: |
