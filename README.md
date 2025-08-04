@@ -12,15 +12,13 @@
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start （3 Steps)
 
 ### 📥 Step 1: Download `.whl` files
 - 🔗 [torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl](https://github.com/Yyyzk123/pytorch-cuda128-sm120/releases/download/v2.9.0-sm120/torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl)
 - 🔗 [torchvision-0.24.0a0+f52c4f1-cp310-linux_x86_64.whl](https://github.com/Yyyzk123/pytorch-cuda128-sm120/releases/download/v2.9.0-sm120/torchvision-0.24.0a0+f52c4f1-cp310-linux_x86_64.whl)
 
----
-
-### 💽 Step 2: Install into Python 3.10 environment
+### 💽 Step 2:  environment
 
 ```bash
 conda create -n torch_env python=3.10 -y
@@ -30,17 +28,19 @@ pip install ./torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl
 pip install ./torchvision-0.24.0a0+f52c4f1-cp310-linux_x86_64.whl
 ```
 
-### ✅ Step 3: Verify installation
+### ✅ Step 3: Verify 
 ```bash
 python -c "import torch; print(torch.__version__); print(torch.cuda.is_available()); print(torch.cuda.get_device_name(0))"
 ```
 
-### 📌 Expected Output
+### 📌 Check
 ```bash
 2.9.0a0+gitc665594
 True
 NVIDIA GeForce RTX 5080 Laptop GPU
 ```
+
+---
 
 ## ✨ Features
 - ✅ Built from source: PyTorch v2.9.0 + gitc665594
