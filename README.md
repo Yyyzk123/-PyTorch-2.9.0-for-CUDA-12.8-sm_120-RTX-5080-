@@ -11,9 +11,8 @@
 > 🙌 **Contribute**: See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines
 
 ---
-
 ## 🚀 Quick Start （3 Steps)
-
+---
 ### 📥 Step 1: Download `.whl` files
 - 🔗 [torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl](https://github.com/Yyyzk123/pytorch-cuda128-sm120/releases/download/v2.9.0-sm120/torch-2.9.0a0+gitc665594-cp310-cp310-linux_x86_64.whl)
 - 🔗 [torchvision-0.24.0a0+f52c4f1-cp310-linux_x86_64.whl](https://github.com/Yyyzk123/pytorch-cuda128-sm120/releases/download/v2.9.0-sm120/torchvision-0.24.0a0+f52c4f1-cp310-linux_x86_64.whl)
@@ -32,7 +31,7 @@ pip install ./torchvision-0.24.0a0+f52c4f1-cp310-linux_x86_64.whl
 ```bash
 python -c "import torch; print(torch.__version__); print(torch.cuda.is_available()); print(torch.cuda.get_device_name(0))"
 ```
-
+---
 ### 📌 Check
 ```bash
 2.9.0a0+gitc665594
@@ -72,7 +71,6 @@ NVIDIA GeForce RTX 5080 Laptop GPU
 
 
 ## 📓 Changelog
-See [CHANGELOG.md](./CHANGELOG.md) for update history. 
-
-## 👉 See [build_info.md](./build_info.md) for full build details (OS, CUDA, commit hash, etc).
+- 👉 See [CHANGELOG.md](./CHANGELOG.md) for update history. 
+- 👉 See [build_info.md](./build_info.md) for full build details (OS, CUDA, commit hash, etc).
 
