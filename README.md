@@ -35,16 +35,17 @@ bash scripts/build_pytorch.sh
 The script builds PyTorch with CUDA 12.8, targets sm_120, and writes the resulting .whl to dist/.
 
 ## ✨ Features
-- ✅ Built from source: PyTorch v2.9.0 + gitc665594
-- ✅ CUDA 12.8 compatible
-- ✅ Supports `sm_120` (RTX 5080, Ada Lovelace)
-- ✅ Python 3.10 environment
-- ✅ Verified on real-world AI pipelines (Gaussian Splatting, SplaTAM)
+✅ Built from source: PyTorch v2.9.0 + gitc665594
+✅ CUDA 12.8 compatible
+✅ Supports sm_120 (RTX 5080, Ada Lovelace)
+✅ Verified on Ubuntu 24.04 + Python 3.10.18
+✅ Matched with torchvision==0.24.0a0+f52c4f1
+✅ Reproducible environment defined in requirements.txt
 
 ## 📋 Requirements
 - Linux x86_64 (Recommended: Ubuntu 24.04)
-- Python 3.10 (Conda environment recommended)
-- CUDA 12.8 installed (NVIDIA driver >= 550)
+- Python 3.10.18 (via Miniconda or virtualenv)
+- CUDA 12.8 installed (NVIDIA Driver ≥ 570.153.02)
 - NVIDIA GPU supporting `sm_120` (e.g., RTX 5080 Laptop)
 - pip >= 21.0
 > ⚠️ **Warning**  
