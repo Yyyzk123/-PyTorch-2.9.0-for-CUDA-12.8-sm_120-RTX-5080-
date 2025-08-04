@@ -23,7 +23,7 @@ jobs:
         apt-get install -y --no-install-recommends \
             wget curl gnupg ca-certificates software-properties-common \
             libnuma1 libgomp1 libopenblas0-pthread libopenblas-dev \
-            python3-pip
+            python3-pip bzip2
        
 
     # 2️⃣ 安装 micromamba 并创建 py310 env  （<5 MB，10 s 内完成）
