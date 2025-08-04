@@ -10,22 +10,19 @@ jobs:
   install-test:
     runs-on: ubuntu-latest
 
-    # 使用官方 CUDA 12.8.1 + cuDNN Ubuntu 24.04 devel 镜像（预装 cuDNN 9, 含 tools）
     container:
       image: nvidia/cuda:12.8.1-cudnn-devel-ubuntu24.04
 
     steps:
-    # 0️⃣ 取仓库代码
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    # 1️⃣ 安装系统依赖（最小化, 用预装 cuDNN, 修复 ldconfig 无 sudo）
-    - name: Install system deps (minimal, repair ldconfig)
+    - name: Install system deps & cuDNN 8 tarball
       run: |
         set -e
         apt-get update -qq
         
-        # 增强修复 ldconfig segfault (Ubuntu 24.04 Docker bug, root 无 sudo)
+        # 修复 ldconfig segfault (Ubuntu 24.04 Docker bug, root 无 sudo)
         dpkg --configure -a || true
         apt-get install -f -y || true
         rm -f /var/cache/ldconfig/aux-cache
@@ -34,19 +31,25 @@ jobs:
         /sbin/ldconfig || true
         apt-get clean
         
-        # 最小依赖（避免 triggers，用镜像预装 cuDNN 9）
+        # 最小依赖（避免 triggers）
         apt-get install -y --no-install-recommends \
-            wget curl ca-certificates python3-pip
+            wget curl ca-certificates python3-pip tar
         
-    # 2️⃣ 安装 micromamba 并创建 Python 3.10 环境（超快）
+        # 安装 cuDNN 8.9.7 tarball（wheel 硬依赖 libcudnn.so.8）
+        tar -xvf cudnn/cudnn-linux-x86_64-8.9.7.29_cuda12-archive.tar.xz
+        cp -P cudnn-linux-x86_64-8.9.7.29_cuda12-archive/include/* /usr/local/cuda/include/
+        cp -P cudnn-linux-x86_64-8.9.7.29_cuda12-archive/lib/* /usr/local/cuda/lib64/
+        chmod a+r /usr/local/cuda/lib64/libcudnn*
+        /sbin/ldconfig
+        echo "cuDNN installed: $(ls /usr/local/cuda/lib64/libcudnn.so.*)"
+        
     - name: Set up micromamba (Python 3.10)
       run: |
         curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
         ./bin/micromamba create -y -p $HOME/py310 python=3.10
         echo "$HOME/py310/bin" >> $GITHUB_PATH
-        export PATH="$HOME/py310/bin:$PATH"  # 显式 export，确保后续可用
+        export PATH="$HOME/py310/bin:$PATH"
 
-    # 3️⃣ 下载最新 Release 中的两个 .whl 文件（torch & torchvision）
     - name: Download wheels from latest GitHub Release
       id: download
       run: |
@@ -64,7 +67,6 @@ jobs:
           sha256sum dist/"$FILE"
         done
 
-    # 4️⃣ 安装 .whl 与其他依赖
     - name: Install wheels & Python deps
       run: |
         export PATH="$HOME/py310/bin:$PATH"
@@ -72,7 +74,6 @@ jobs:
         python -m pip install dist/torchvision-*.whl
         python -m pip install -r requirements.txt
 
-    # 5️⃣ 运行 Demo & 打印环境信息
     - name: Verify installation
       run: |
         export PATH="$HOME/py310/bin:$PATH"
