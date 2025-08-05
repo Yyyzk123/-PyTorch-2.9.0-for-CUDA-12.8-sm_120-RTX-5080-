@@ -1,4 +1,4 @@
-# PyTorch 2.9.0 for CUDA 12.8 + sm_120 (RTX 5080) Offline
+# torch-cu128-sm120 (RTX 5080) Offline
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![CUDA 12.8](https://img.shields.io/badge/CUDA-12.8-success.svg)](https://developer.nvidia.com/cuda-downloads)
