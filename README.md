@@ -6,9 +6,8 @@
 [![GitHub stars](https://img.shields.io/github/stars/Yyyzk123/pytorch-cuda128-sm120?style=social)](https://github.com/Yyyzk123/pytorch-cuda128-sm120)
 
 > ⚡ **Prebuilt PyTorch + torchvision for Ada GPUs (e.g., RTX 5080)**  
-> 🔧 **Built for CUDA 12.8 · Fully Offline Install · Verified in Gaussian Splatting / SplaTAM**  
+> 🔧 **free-VPN · Built for CUDA 12.8 · Verified in Gaussian Splatting / SplaTAM**  
 > 🎓 **Educational**: How to compile PyTorch for `sm_120`.  
-> 🌍 **Offline**: For VPN-free, low-bandwidth setups.  
 > 😣 **Feedback & Issues**: Use [GitHub Issues](https://github.com/Yyyzk123/torch-cu128-sm120/issues)  
 > 🙌 **Contribute**: See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines  
 
