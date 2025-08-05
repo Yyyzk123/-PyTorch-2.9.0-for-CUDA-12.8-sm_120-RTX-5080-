@@ -1,4 +1,4 @@
-# PyTorch 2.9.0 for CUDA 12.8 + sm_120 (RTX 5080)
+# PyTorch 2.9.0 for CUDA 12.8 + sm_120 (RTX 5080) Offline
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![CUDA 12.8](https://img.shields.io/badge/CUDA-12.8-success.svg)](https://developer.nvidia.com/cuda-downloads)
@@ -6,7 +6,9 @@
 [![GitHub stars](https://img.shields.io/github/stars/Yyyzk123/pytorch-cuda128-sm120?style=social)](https://github.com/Yyyzk123/pytorch-cuda128-sm120)
 
 > ⚡ **Prebuilt PyTorch + torchvision for Ada GPUs (e.g., RTX 5080)**  
-> 🔧 **Built for CUDA 12.8 · Fully Offline Install · Verified in Gaussian Splatting / SplaTAM**  
+> 🔧 **Built for CUDA 12.8 · Fully Offline Install · Verified in Gaussian Splatting / SplaTAM**
+> 🎓  Educational Example: Demonstrates how to manually compile PyTorch for future CUDA architectures like `sm_120`, making it a practical case study for developers.
+> 🌍  Offline-Friendly Alternative: Useful for low-bandwidth environments, such as machines without VPN access or air-gapped deployment scenarios in regions like mainland China.
 > 😣 **Feedback & Issues**: Use [GitHub Issues](https://github.com/Yyyzk123/pytorch-cuda128-sm120/issues)  
 > 🙌 **Contribute**: See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines
 
